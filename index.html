@@ -18,144 +18,161 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #080808;
-            color: #ffffff;
+            background: #0B0E12;
+            color: #F0F4F8;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(47, 60, 72, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(47, 60, 72, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
+            position: relative;
+            z-index: 1;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
 
         .logo {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 300;
-            letter-spacing: 0.3em;
-            color: #ffffff;
-            margin-bottom: 12px;
+            letter-spacing: 0.2em;
+            color: #F0F4F8;
+            margin-bottom: 8px;
         }
 
         .logo .highlight {
-            color: #444444;
+            color: #2F3C48;
         }
 
         .tagline {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: #A9B8C5;
+            text-transform: uppercase;
+        }
+
+        .sphere-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            margin-bottom: 32px;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .sphere-container:active {
+            cursor: grabbing;
+        }
+
+        .sphere {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(240, 244, 248, 0.4), rgba(169, 184, 197, 0.2));
+            box-shadow: 
+                0 0 60px rgba(169, 184, 197, 0.3),
+                inset 0 0 30px rgba(240, 244, 248, 0.1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .sphere.perfect {
+            background: radial-gradient(circle at 30% 30%, rgba(240, 244, 248, 0.6), rgba(169, 184, 197, 0.3));
+            box-shadow: 
+                0 0 80px rgba(74, 222, 128, 0.4),
+                inset 0 0 40px rgba(74, 222, 128, 0.2);
+        }
+
+        .sphere-guide {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
             letter-spacing: 0.15em;
-            color: #888888;
+            color: #2F3C48;
             text-transform: uppercase;
+            white-space: nowrap;
         }
 
-        .calculator {
-            background: #111111;
-            border: 1px solid #333333;
-            border-radius: 12px;
-            padding: 32px;
-        }
-
-        .input-group {
+        .values {
+            display: flex;
+            justify-content: space-between;
             margin-bottom: 24px;
+            padding: 0 20px;
         }
 
-        .input-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .input-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            letter-spacing: 0.1em;
-            color: #888888;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .input-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .input-btn {
-            width: 44px;
-            height: 44px;
-            border: 1px solid #333333;
-            background: #1a1a1a;
-            color: #888888;
-            font-size: 18px;
-            font-weight: 300;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.15s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .input-btn:hover {
-            border-color: #ffffff;
-            color: #ffffff;
-            background: #222222;
-        }
-
-        .input-btn:active {
-            transform: scale(0.95);
-        }
-
-        .input-value {
-            flex: 1;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 20px;
-            color: #ffffff;
-            font-variant-numeric: tabular-nums;
+        .value-group {
             text-align: center;
-            background: #1a1a1a;
-            border: 1px solid #333333;
-            border-radius: 6px;
-            padding: 8px;
-            outline: none;
         }
 
-        .input-unit {
+        .value-label {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            letter-spacing: 0.1em;
-            color: #666666;
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            color: #A9B8C5;
             text-transform: uppercase;
-            width: 40px;
+            margin-bottom: 4px;
+        }
+
+        .value-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            color: #F0F4F8;
+            font-variant-numeric: tabular-nums;
         }
 
         .result {
-            margin-top: 32px;
-            padding-top: 32px;
-            border-top: 1px solid #333333;
             text-align: center;
+            padding: 24px;
+            background: rgba(11, 14, 18, 0.5);
+            border: 1px solid rgba(47, 60, 72, 0.3);
+            border-radius: 12px;
         }
 
         .result-label {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            letter-spacing: 0.1em;
-            color: #888888;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: #A9B8C5;
             text-transform: uppercase;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .result-value {
-            font-size: 36px;
+            font-size: 42px;
             font-weight: 300;
-            color: #ffffff;
+            color: #F0F4F8;
             font-variant-numeric: tabular-nums;
             letter-spacing: -0.02em;
             line-height: 1;
@@ -164,47 +181,47 @@
 
         .result-unit {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            letter-spacing: 0.1em;
-            color: #888888;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: #A9B8C5;
             text-transform: uppercase;
         }
 
         .status {
-            margin-top: 16px;
+            margin-top: 12px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 10px;
-            letter-spacing: 0.1em;
-            color: #666666;
+            letter-spacing: 0.15em;
+            color: #2F3C48;
             text-transform: uppercase;
             padding: 6px 12px;
-            background: #1a1a1a;
+            background: rgba(47, 60, 72, 0.2);
             border-radius: 4px;
             display: inline-block;
         }
 
         .status.excellent {
             color: #4ade80;
-            background: rgba(74, 222, 128, 0.1);
+            background: rgba(74, 222, 128, 0.15);
         }
 
         .status.fair {
             color: #fbbf24;
-            background: rgba(251, 191, 36, 0.1);
+            background: rgba(251, 191, 36, 0.15);
         }
 
         .status.poor {
             color: #f87171;
-            background: rgba(248, 113, 113, 0.1);
+            background: rgba(248, 113, 113, 0.15);
         }
 
         .footer {
-            margin-top: 40px;
+            margin-top: 32px;
             text-align: center;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 0.1em;
-            color: #666666;
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            color: #2F3C48;
             text-transform: uppercase;
         }
 
@@ -218,20 +235,20 @@
             }
 
             .logo {
-                font-size: 28px;
-            }
-
-            .calculator {
-                padding: 24px;
-            }
-
-            .result-value {
                 font-size: 32px;
             }
 
-            .input-btn {
-                width: 40px;
-                height: 40px;
+            .sphere-container {
+                height: 250px;
+            }
+
+            .sphere {
+                width: 100px;
+                height: 100px;
+            }
+
+            .result-value {
+                font-size: 36px;
             }
         }
     </style>
@@ -243,33 +260,27 @@
             <div class="tagline">High-Precision Error Calculator</div>
         </div>
 
-        <div class="calculator">
-            <div class="input-group">
-                <div class="input-label">Tick Duration</div>
-                <div class="input-row">
-                    <button class="input-btn" id="tickDown">−</button>
-                    <input type="text" class="input-value" id="tickValue" value="0.00" readonly>
-                    <button class="input-btn" id="tickUp">+</button>
-                    <div class="input-unit">ms</div>
-                </div>
-            </div>
+        <div class="sphere-container" id="sphereContainer">
+            <div class="sphere" id="sphere"></div>
+            <div class="sphere-guide">Drag sphere to adjust timing</div>
+        </div>
 
-            <div class="input-group">
-                <div class="input-label">Tock Duration</div>
-                <div class="input-row">
-                    <button class="input-btn" id="tockDown">−</button>
-                    <input type="text" class="input-value" id="tockValue" value="0.00" readonly>
-                    <button class="input-btn" id="tockUp">+</button>
-                    <div class="input-unit">ms</div>
-                </div>
+        <div class="values">
+            <div class="value-group">
+                <div class="value-label">Tick</div>
+                <div class="value-display" id="tickValue">0.00 ms</div>
             </div>
+            <div class="value-group">
+                <div class="value-label">Tock</div>
+                <div class="value-display" id="tockValue">0.00 ms</div>
+            </div>
+        </div>
 
-            <div class="result">
-                <div class="result-label">Beat Error</div>
-                <div class="result-value" id="beatError">0.00</div>
-                <div class="result-unit">milliseconds</div>
-                <div class="status" id="status">Awaiting Input</div>
-            </div>
+        <div class="result">
+            <div class="result-label">Beat Error</div>
+            <div class="result-value" id="beatError">0.00</div>
+            <div class="result-unit">milliseconds</div>
+            <div class="status" id="status">Awaiting Input</div>
         </div>
 
         <div class="footer">
@@ -278,9 +289,13 @@
     </div>
 
     <script>
-        let tick = 0;
-        let tock = 0;
+        let tick = 5.00;
+        let tock = 5.00;
+        let isDragging = false;
+        let startX = 0;
 
+        const sphereContainer = document.getElementById('sphereContainer');
+        const sphere = document.getElementById('sphere');
         const tickValue = document.getElementById('tickValue');
         const tockValue = document.getElementById('tockValue');
         const beatError = document.getElementById('beatError');
@@ -291,6 +306,7 @@
                 beatError.textContent = '0.00';
                 status.textContent = 'Awaiting Input';
                 status.className = 'status';
+                sphere.classList.remove('perfect');
                 return;
             }
 
@@ -300,49 +316,86 @@
             if (error < 0.5) {
                 status.textContent = 'Excellent Symmetry';
                 status.className = 'status excellent';
+                sphere.classList.add('perfect');
             } else if (error <= 1.0) {
                 status.textContent = 'Adjust Recommended';
                 status.className = 'status fair';
+                sphere.classList.remove('perfect');
             } else {
                 status.textContent = 'Requires Regulation';
                 status.className = 'status poor';
+                sphere.classList.remove('perfect');
             }
+
+            updateSphere();
         }
 
-        function adjustValue(field, delta) {
-            if (field === 'tick') {
-                tick = Math.max(0, Math.round((tick + delta) * 100) / 100);
-                tickValue.value = tick.toFixed(2);
-            } else {
-                tock = Math.max(0, Math.round((tock + delta) * 100) / 100);
-                tockValue.value = tock.toFixed(2);
-            }
+        function updateSphere() {
+            const diff = tick - tock;
+            const maxOffset = 60;
+            const offset = Math.max(-maxOffset, Math.min(maxOffset, diff * 20));
+            sphere.style.transform = `translate(calc(-50% + ${offset}px), -50%)`;
+            
+            const scale = 1 + (Math.abs(diff) * 0.05);
+            sphere.style.width = `${120 * scale}px`;
+            sphere.style.height = `${120 * scale}px`;
+        }
+
+        function updateDisplay() {
+            tickValue.textContent = tick.toFixed(2) + ' ms';
+            tockValue.textContent = tock.toFixed(2) + ' ms';
             calculateBeatError();
         }
 
-        document.getElementById('tickDown').addEventListener('click', () => adjustValue('tick', -0.01));
-        document.getElementById('tickUp').addEventListener('click', () => adjustValue('tick', 0.01));
-        document.getElementById('tockDown').addEventListener('click', () => adjustValue('tock', -0.01));
-        document.getElementById('tockUp').addEventListener('click', () => adjustValue('tock', 0.01));
-
-        document.addEventListener('keydown', (e) => {
-            const step = e.shiftKey ? 0.1 : 0.01;
-            
-            switch(e.key) {
-                case 'ArrowUp':
-                    adjustValue('tick', step);
-                    break;
-                case 'ArrowDown':
-                    adjustValue('tick', -step);
-                    break;
-                case 'ArrowRight':
-                    adjustValue('tock', step);
-                    break;
-                case 'ArrowLeft':
-                    adjustValue('tock', -step);
-                    break;
-            }
+        sphereContainer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            sphereContainer.style.cursor = 'grabbing';
         });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaX = e.clientX - startX;
+            const sensitivity = 0.01;
+            
+            tick = Math.max(0.1, Math.min(10, tick + deltaX * sensitivity));
+            tock = Math.max(0.1, Math.min(10, tock - deltaX * sensitivity));
+            
+            startX = e.clientX;
+            updateDisplay();
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            sphereContainer.style.cursor = 'grab';
+        });
+
+        // Touch support
+        sphereContainer.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaX = e.touches[0].clientX - startX;
+            const sensitivity = 0.01;
+            
+            tick = Math.max(0.1, Math.min(10, tick + deltaX * sensitivity));
+            tock = Math.max(0.1, Math.min(10, tock - deltaX * sensitivity));
+            
+            startX = e.touches[0].clientX;
+            updateDisplay();
+        });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        // Initialize
+        updateDisplay();
     </script>
 </body>
 </html>
