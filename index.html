@@ -347,6 +347,17 @@
             calculateBeatError();
         }
 
+        function handleDrag(clientX) {
+            const deltaX = clientX - startX;
+            const sensitivity = 0.01;
+            
+            tick = Math.max(0.1, Math.min(10, tick + deltaX * sensitivity));
+            tock = Math.max(0.1, Math.min(10, tock - deltaX * sensitivity));
+            
+            startX = clientX;
+            updateDisplay();
+        }
+
         sphereContainer.addEventListener('mousedown', (e) => {
             isDragging = true;
             startX = e.clientX;
@@ -355,15 +366,7 @@
 
         document.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
-            
-            const deltaX = e.clientX - startX;
-            const sensitivity = 0.01;
-            
-            tick = Math.max(0.1, Math.min(10, tick + deltaX * sensitivity));
-            tock = Math.max(0.1, Math.min(10, tock - deltaX * sensitivity));
-            
-            startX = e.clientX;
-            updateDisplay();
+            handleDrag(e.clientX);
         });
 
         document.addEventListener('mouseup', () => {
@@ -371,7 +374,6 @@
             sphereContainer.style.cursor = 'grab';
         });
 
-        // Touch support
         sphereContainer.addEventListener('touchstart', (e) => {
             isDragging = true;
             startX = e.touches[0].clientX;
@@ -379,15 +381,7 @@
 
         document.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
-            
-            const deltaX = e.touches[0].clientX - startX;
-            const sensitivity = 0.01;
-            
-            tick = Math.max(0.1, Math.min(10, tick + deltaX * sensitivity));
-            tock = Math.max(0.1, Math.min(10, tock - deltaX * sensitivity));
-            
-            startX = e.touches[0].clientX;
-            updateDisplay();
+            handleDrag(e.touches[0].clientX);
         });
 
         document.addEventListener('touchend', () => {
