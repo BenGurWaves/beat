@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beat // High-Precision Error Calculator</title>
+    <meta name="description" content="Watch Beat Error Calculator - High-precision tool for watchmakers to calculate mechanical movement symmetry. Measure tick and tock timing to determine beat error in milliseconds.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --abyss: #0B0E12;
+            --ether: rgba(240, 244, 248, 0.9);
+            --grid: #2F3C48;
+            --precision: #A9B8C5;
+            --excellent: #4ade80;
+            --fair: #fbbf24;
+            --poor: #f87171;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--abyss);
+            color: var(--ether);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Living Texture Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(47, 60, 72, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(47, 60, 72, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(169, 184, 197, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Grid Lines */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(47, 60, 72, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(47, 60, 72, 0.1) 1px, transparent 1px);
+            background-size: 100px 100px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: var(--ether);
+            margin-bottom: 8px;
+        }
+
+        .logo .highlight {
+            color: var(--grid);
+        }
+
+        .tagline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: var(--precision);
+            text-transform: uppercase;
+        }
+
+        .calculator {
+            background: rgba(11, 14, 18, 0.8);
+            border: 1px solid var(--grid);
+            border-radius: 16px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+        }
+
+        .input-group {
+            margin-bottom: 32px;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--precision);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .input-btn {
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--grid);
+            background: rgba(47, 60, 72, 0.3);
+            color: var(--precision);
+            font-size: 20px;
+            font-weight: 300;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-btn:hover {
+            border-color: var(--ether);
+            color: var(--ether);
+            background: rgba(47, 60, 72, 0.5);
+            transform: scale(1.05);
+        }
+
+        .input-btn:active {
+            transform: scale(0.95);
+        }
+
+        .input-value {
+            flex: 1;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            color: var(--ether);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+            background: rgba(47, 60, 72, 0.3);
+            border: 1px solid var(--grid);
+            border-radius: 8px;
+            padding: 12px;
+            outline: none;
+            font-weight: 400;
+        }
+
+        .input-unit {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--grid);
+            text-transform: uppercase;
+            width: 32px;
+        }
+
+        .result {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid var(--grid);
+            text-align: center;
+        }
+
+        .result-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--precision);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .result-value {
+            font-size: 56px;
+            font-weight: 300;
+            color: var(--ether);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .result-unit {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            color: var(--precision);
+            text-transform: uppercase;
+        }
+
+        .status {
+            margin-top: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--grid);
+            text-transform: uppercase;
+            padding: 8px 16px;
+            background: rgba(47, 60, 72, 0.3);
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .status.excellent {
+            color: var(--excellent);
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .status.fair {
+            color: var(--fair);
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .status.poor {
+            color: var(--poor);
+            background: rgba(248, 113, 113, 0.1);
+        }
+
+        .footer {
+            margin-top: 48px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            color: var(--grid);
+            text-transform: uppercase;
+        }
+
+        .footer a {
+            color: var(--precision);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: var(--ether);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .logo {
+                font-size: 40px;
+            }
+
+            .calculator {
+                padding: 32px;
+            }
+
+            .result-value {
+                font-size: 48px;
+            }
+
+            .input-btn {
+                width: 44px;
+                height: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo"><span class="highlight">B</span>EA<span class="highlight">T</span></div>
+            <div class="tagline">High-Precision Error Calculator</div>
+        </div>
+
+        <div class="calculator">
+            <div class="input-group">
+                <div class="input-label">Tick Duration</div>
+                <div class="input-row">
+                    <button class="input-btn" id="tickDown">−</button>
+                    <input type="text" class="input-value" id="tickValue" value="0.00" readonly>
+                    <button class="input-btn" id="tickUp">+</button>
+                    <div class="input-unit">ms</div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="input-label">Tock Duration</div>
+                <div class="input-row">
+                    <button class="input-btn" id="tockDown">−</button>
+                    <input type="text" class="input-value" id="tockValue" value="0.00" readonly>
+                    <button class="input-btn" id="tockUp">+</button>
+                    <div class="input-unit">ms</div>
+                </div>
+            </div>
+
+            <div class="result">
+                <div class="result-label">Beat Error</div>
+                <div class="result-value" id="beatError">0.00</div>
+                <div class="result-unit">milliseconds</div>
+                <div class="status" id="status">Awaiting Input</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            CALYVENT // PRECISION HOROLOGY
+        </div>
+    </div>
+
+    <script>
+        let tick = 0;
+        let tock = 0;
+
+        const tickValue = document.getElementById('tickValue');
+        const tockValue = document.getElementById('tockValue');
+        const beatError = document.getElementById('beatError');
+        const status = document.getElementById('status');
+
+        function calculateBeatError() {
+            if (tick <= 0 || tock <= 0) {
+                beatError.textContent = '0.00';
+                status.textContent = 'Awaiting Input';
+                status.className = 'status';
+                return;
+            }
+
+            const error = Math.abs(tick - tock) / 2;
+            beatError.textContent = error.toFixed(2);
+
+            if (error < 0.5) {
+                status.textContent = 'Excellent Symmetry';
+                status.className = 'status excellent';
+            } else if (error <= 1.0) {
+                status.textContent = 'Adjust Recommended';
+                status.className = 'status fair';
+            } else {
+                status.textContent = 'Requires Regulation';
+                status.className = 'status poor';
+            }
+        }
+
+        function adjustValue(field, delta) {
+            if (field === 'tick') {
+                tick = Math.max(0, Math.round((tick + delta) * 100) / 100);
+                tickValue.value = tick.toFixed(2);
+            } else {
+                tock = Math.max(0, Math.round((tock + delta) * 100) / 100);
+                tockValue.value = tock.toFixed(2);
+            }
+            calculateBeatError();
+        }
+
+        document.getElementById('tickDown').addEventListener('click', () => adjustValue('tick', -0.01));
+        document.getElementById('tickUp').addEventListener('click', () => adjustValue('tick', 0.01));
+        document.getElementById('tockDown').addEventListener('click', () => adjustValue('tock', -0.01));
+        document.getElementById('tockUp').addEventListener('click', () => adjustValue('tock', 0.01));
+
+        document.addEventListener('keydown', (e) => {
+            const step = e.shiftKey ? 0.1 : 0.01;
+            
+            switch(e.key) {
+                case 'ArrowUp':
+                    adjustValue('tick', step);
+                    break;
+                case 'ArrowDown':
+                    adjustValue('tick', -step);
+                    break;
+                case 'ArrowRight':
+                    adjustValue('tock', step);
+                    break;
+                case 'ArrowLeft':
+                    adjustValue('tock', -step);
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
